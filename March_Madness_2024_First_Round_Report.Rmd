@@ -1,0 +1,314 @@
+---
+title: "2024 NCAA Tournament First Round Matchup Report"
+# author: "Chris Givens"
+# date: "2024-03-21"
+output: 
+  pdf_document:
+    toc: true
+toc-title: "Regions"
+---
+
+```{r setup, include=FALSE, echo=FALSE, results='hide'}
+rm(list = ls())
+# Set up options for Markdown
+knitr::opts_chunk$set(eval = TRUE,
+                      echo = FALSE,
+                      cache = FALSE,
+                      include = TRUE,
+                      collapse = TRUE,
+                      warning = FALSE,
+                      message = FALSE,
+                      error = TRUE,
+                      fig.align = "center",
+                      fig.width = 8,
+                      fig.height = 6,
+                      dpi = 300)
+
+source("Predicted_Scores_Kenpom_Function.R")
+
+gt_grob <- function(gt_object, ...){
+
+  out_name <- file.path(
+    tempfile(pattern = "file", tmpdir = tempdir(), fileext = ".png")
+  )
+
+  gtsave(gt_object, out_name, ...)
+
+  in_png <- png::readPNG(out_name)
+
+  on.exit(file.remove(out_name), add=TRUE)
+
+  grid::rasterGrob(in_png)
+
+}
+
+# Read in any additional libraries required:
+library(cowplot)
+```
+
+\newpage
+
+# East Region
+
+
+```{r East Region, echo=FALSE, message=FALSE, fig.width=6, fig.height=8, results="asis"}
+# Create Vector of matchups:
+team1 <- c("Connecticut", "Florida Atlantic", "San Diego St.", "Auburn", "BYU", "Illinois", "Washington St.", "Iowa St.")
+team2 <- c("Stetson", "Northwestern", "UAB", "Yale", "Duquesne", "Morehead St.", "Drake", "South Dakota St.")
+
+# length(team1) == length(team2)
+
+for (i in 1:length(team1)) {
+  pred_gt <- score_prediction_gt(team1 = team1[i],
+                                 team2 = team2[i],
+                                 court = "Neutral",
+                                 year = most_recent_mbb_season(),
+                                 data = adj_em_df)
+
+# Team 1 on offense
+test_gt <- kenpom_table_gt(team1 = team1[i],
+                           team2 = team2[i],
+                           data = kenpom_table_dat,
+                           ntl_avg = national_averages)
+
+# Team 2 on offense
+test_gt2 <- kenpom_table_gt(team1 = team2[i],
+                            team2 = team1[i],
+                            data = kenpom_table_dat,
+                            ntl_avg = national_averages)
+
+# pred_gt
+# print(pred_gt)
+# print(test_gt)
+# print(test_gt2)
+
+gt_pred <- gt_grob(pred_gt)
+gt_plot <- gt_grob(test_gt)
+gt_plot2 <- gt_grob(test_gt2)
+
+cat("##", team1[i], " vs. ", team2[i])
+
+print(plot_grid(
+  gt_pred,
+  plot_grid(gt_plot, NULL, gt_plot2, rel_widths = c(1, 0, 1), align = "hv", nrow = 1),
+  ncol = 1,
+  rel_heights = c(0.2, 1)
+))
+# print("Test\n")
+# Print command to create a new page
+cat("\\nopagebreak\n")
+cat("\\footnotesize Data: www.kenpom.com with hoopR\n\n")
+cat("\\newpage")
+}
+
+```
+# West Region
+
+
+```{r West Region, echo=FALSE, message=FALSE, fig.width=6, fig.height=8, results="asis"}
+# Create Vector of matchups:
+team1 <- c("North Carolina", "Mississippi St.", "Saint Mary's", "Alabama", "Clemson", "Baylor", "Dayton", "Arizona")
+team2 <- c("Wagner", "Michigan St.", "Grand Canyon", "Charleston", "New Mexico", "Colgate", "Nevada", "Long Beach St.")
+
+# length(team1) == length(team2)
+# setdiff(c(team1, team2), kenpom_table_dat$team)
+
+for (i in 1:length(team1)) {
+  pred_gt <- score_prediction_gt(team1 = team1[i],
+                                 team2 = team2[i],
+                                 court = "Neutral",
+                                 year = most_recent_mbb_season(),
+                                 data = adj_em_df)
+
+# Team 1 on offense
+test_gt <- kenpom_table_gt(team1 = team1[i],
+                           team2 = team2[i],
+                           data = kenpom_table_dat,
+                           ntl_avg = national_averages)
+
+# Team 2 on offense
+test_gt2 <- kenpom_table_gt(team1 = team2[i],
+                            team2 = team1[i],
+                            data = kenpom_table_dat,
+                            ntl_avg = national_averages)
+
+# pred_gt
+# print(pred_gt)
+# print(test_gt)
+# print(test_gt2)
+
+gt_pred <- gt_grob(pred_gt)
+gt_plot <- gt_grob(test_gt)
+gt_plot2 <- gt_grob(test_gt2)
+
+cat("##", team1[i], " vs. ", team2[i])
+
+print(plot_grid(
+  gt_pred,
+  plot_grid(gt_plot, NULL, gt_plot2, rel_widths = c(1, 0, 1), align = "hv", nrow = 1),
+  ncol = 1,
+  rel_heights = c(0.2, 1)
+))
+# print("Test\n")
+# Print command to create a new page
+cat("\\nopagebreak\n")
+cat("\\footnotesize Data: www.kenpom.com with hoopR\n\n")
+cat("\\newpage")
+}
+
+```
+
+
+# South Region
+
+
+```{r South Region, echo=FALSE, message=FALSE, fig.width=6, fig.height=8, results="asis"}
+# Create Vector of matchups:
+team1 <- c("Houston", "Nebraska", "Wisconsin", "Duke", "Texas Tech", "Kentucky", "Florida", "Marquette")
+team2 <- c("Longwood", "Texas A&M", "James Madison", "Vermont", "N.C. State", "Oakland", "Colorado", "Western Kentucky")
+
+# length(team1) == length(team2)
+# setdiff(c(team1, team2), kenpom_table_dat$team)
+
+for (i in 1:length(team1)) {
+  pred_gt <- score_prediction_gt(team1 = team1[i],
+                                 team2 = team2[i],
+                                 court = "Neutral",
+                                 year = most_recent_mbb_season(),
+                                 data = adj_em_df)
+
+# Team 1 on offense
+test_gt <- kenpom_table_gt(team1 = team1[i],
+                           team2 = team2[i],
+                           data = kenpom_table_dat,
+                           ntl_avg = national_averages)
+
+# Team 2 on offense
+test_gt2 <- kenpom_table_gt(team1 = team2[i],
+                            team2 = team1[i],
+                            data = kenpom_table_dat,
+                            ntl_avg = national_averages)
+
+# pred_gt
+# print(pred_gt)
+# print(test_gt)
+# print(test_gt2)
+
+gt_pred <- gt_grob(pred_gt)
+gt_plot <- gt_grob(test_gt)
+gt_plot2 <- gt_grob(test_gt2)
+
+cat("##", team1[i], " vs. ", team2[i])
+
+print(plot_grid(
+  gt_pred,
+  plot_grid(gt_plot, NULL, gt_plot2, rel_widths = c(1, 0, 1), align = "hv", nrow = 1),
+  ncol = 1,
+  rel_heights = c(0.2, 1)
+))
+# print("Test\n")
+# Print command to create a new page
+cat("\\nopagebreak\n")
+cat("\\footnotesize Data: www.kenpom.com with hoopR\n\n")
+cat("\\newpage")
+}
+
+```
+
+
+# Midwest Region
+
+
+```{r Midwest Region, echo=FALSE, message=FALSE, fig.width=6, fig.height=8, results="asis"}
+# Create Vector of matchups:
+team1 <- c("Purdue", "Utah St.", "Gonzaga", "Kansas", "South Carolina", "Creighton", "Texas", "Tennessee")
+team2 <- c("Grambling St.", "TCU", "McNeese St.", "Samford", "Oregon", "Akron", "Colorado St.", "Saint Peter's")
+
+# length(team1) == length(team2)
+# setdiff(c(team1, team2), kenpom_table_dat$team)
+
+for (i in 1:length(team1)) {
+  pred_gt <- score_prediction_gt(team1 = team1[i],
+                                 team2 = team2[i],
+                                 court = "Neutral",
+                                 year = most_recent_mbb_season(),
+                                 data = adj_em_df)
+
+# Team 1 on offense
+test_gt <- kenpom_table_gt(team1 = team1[i],
+                           team2 = team2[i],
+                           data = kenpom_table_dat,
+                           ntl_avg = national_averages)
+
+# Team 2 on offense
+test_gt2 <- kenpom_table_gt(team1 = team2[i],
+                            team2 = team1[i],
+                            data = kenpom_table_dat,
+                            ntl_avg = national_averages)
+
+# pred_gt
+# print(pred_gt)
+# print(test_gt)
+# print(test_gt2)
+
+gt_pred <- gt_grob(pred_gt)
+gt_plot <- gt_grob(test_gt)
+gt_plot2 <- gt_grob(test_gt2)
+
+cat("##", team1[i], " vs. ", team2[i])
+
+print(plot_grid(
+  gt_pred,
+  plot_grid(gt_plot, NULL, gt_plot2, rel_widths = c(1, 0, 1), align = "hv", nrow = 1),
+  ncol = 1,
+  rel_heights = c(0.2, 1)
+))
+# print("Test\n")
+# Print command to create a new page
+cat("\\nopagebreak\n")
+cat("\\footnotesize Data: www.kenpom.com with hoopR\n\n")
+cat("\\newpage")
+}
+
+```
+
+
+
+```{r Individual runs, eval=FALSE}
+team1 <- "Tennessee"
+team2 <- "Baylor"
+
+  pred_gt <- score_prediction_gt(team1 = team1,
+                                 team2 = team2,
+                                 court = "Neutral",
+                                 year = most_recent_mbb_season(),
+                                 data = adj_em_df)
+
+# Team 1 on offense
+test_gt <- kenpom_table_gt(team1 = team1,
+                           team2 = team2,
+                           data = kenpom_table_dat,
+                           ntl_avg = national_averages)
+
+# Team 2 on offense
+test_gt2 <- kenpom_table_gt(team1 = team2,
+                            team2 = team1,
+                            data = kenpom_table_dat,
+                            ntl_avg = national_averages)
+
+# pred_gt
+# print(pred_gt)
+# print(test_gt)
+# print(test_gt2)
+
+gt_pred <- gt_grob(pred_gt)
+gt_plot <- gt_grob(test_gt)
+gt_plot2 <- gt_grob(test_gt2)
+
+print(plot_grid(
+  gt_pred,
+  plot_grid(gt_plot, NULL, gt_plot2, rel_widths = c(1, 0, 1), align = "hv", nrow = 1),
+  ncol = 1,
+  rel_heights = c(0.2, 1)
+))
+```
